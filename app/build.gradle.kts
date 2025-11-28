@@ -41,4 +41,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    // Dynamic animation -- not using currently - but plan to use later
+    implementation("com.airbnb.android:lottie:6.4.0")
 }
