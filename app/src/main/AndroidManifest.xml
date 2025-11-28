@@ -12,6 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LMNL">
         <activity
+            android:name=".user.CreateProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".user.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".user.LoginActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
