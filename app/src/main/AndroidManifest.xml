@@ -20,6 +20,8 @@
         <activity
             android:name=".user.LoginActivity"
             android:exported="false" />
+        <activity android:name=".post.FeedActivity" />
+        <activity android:name=".post.CreatePostActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -29,6 +31,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>
