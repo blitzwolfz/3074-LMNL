@@ -1,14 +1,15 @@
-<!-- res/layout/item_post.xml -->
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
     app:cardCornerRadius="16dp"
     app:cardUseCompatPadding="true"
     app:cardElevation="2dp"
-    app:cardBackgroundColor="@color/white">
+    app:cardBackgroundColor="@color/white"
+    tools:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,21 +17,24 @@
         android:orientation="vertical"
         android:padding="12dp">
 
-        <!-- Header row -->
+        <!-- HEADER ROW -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
+            <!-- Avatar -->
             <ImageView
                 android:id="@+id/imgAvatar"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:layout_marginEnd="8dp"
+                android:scaleType="centerCrop"
                 android:src="@drawable/ic_avatar_placeholder"
-                android:scaleType="centerCrop" />
+                android:layout_marginEnd="8dp"
+                tools:src="@android:drawable/sym_def_app_icon" />
 
+            <!-- Name + Handle Row -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -41,21 +45,21 @@
                     android:id="@+id/tvAuthorName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Author Name"
                     android:textColor="@color/text_primary"
+                    android:textSize="14sp"
                     android:textStyle="bold"
-                    android:textSize="14sp" />
+                    tools:text="Dr. Chen" />
 
                 <TextView
                     android:id="@+id/tvHandleAndTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@handle · 2h ago"
                     android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    tools:text="@drchen · 1h ago" />
             </LinearLayout>
 
-            <!-- Verified badge -->
+            <!-- Verified Badge (hidden at runtime; visible in preview) -->
             <TextView
                 android:id="@+id/tvVerified"
                 android:layout_width="wrap_content"
@@ -66,27 +70,28 @@
                 android:textSize="11sp"
                 android:textColor="@color/purple_primary"
                 android:background="@drawable/bg_badge_verified"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:visibility="visible" />
         </LinearLayout>
 
-        <!-- Post text -->
+        <!-- POST TEXT -->
         <TextView
             android:id="@+id/tvContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Post content goes here..."
             android:textColor="@color/text_primary"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            tools:text="Daily reminder to log off and stretch between study sessions." />
 
-        <!-- Divider -->
+        <!-- DIVIDER -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="8dp"
             android:background="@color/divider" />
 
-        <!-- Interaction row -->
+        <!-- INTERACTION ROW -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -94,6 +99,7 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
+            <!-- LIKE BUTTON -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLike"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -107,6 +113,7 @@
                 app:iconPadding="6dp"
                 app:iconGravity="textStart" />
 
+            <!-- COMMENT BUTTON -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnComment"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -121,24 +128,27 @@
                 app:iconPadding="6dp"
                 app:iconGravity="textStart" />
 
+            <!-- Like Count -->
             <TextView
                 android:id="@+id/tvLikeCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="12"
                 android:textColor="@color/text_secondary"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                tools:text="12" />
 
+            <!-- Comment Count -->
             <TextView
                 android:id="@+id/tvCommentCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:text="· 3 comments"
                 android:textColor="@color/text_secondary"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                tools:text="· 3 comments" />
 
+            <!-- More menu -->
             <ImageButton
                 android:id="@+id/btnMore"
                 android:layout_width="24dp"
@@ -146,7 +156,8 @@
                 android:layout_marginStart="auto"
                 android:background="@android:color/transparent"
                 android:src="@drawable/ic_more_vert"
-                android:contentDescription="More options" />
+                android:contentDescription="More options"
+                tools:src="@android:drawable/ic_menu_more" />
         </LinearLayout>
 
     </LinearLayout>

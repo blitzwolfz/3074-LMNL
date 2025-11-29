@@ -2,12 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/feed"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    tools:context=".FeedActivity">
 
-    <!-- Top App Bar -->
+    <!-- TOP APP BAR -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/topAppBar"
         android:layout_width="0dp"
@@ -22,19 +21,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Main content (card + feed) -->
+    <!-- MAIN CONTENT AREA (Between toolbar and bottom nav) -->
     <LinearLayout
         android:id="@+id/contentContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
         android:padding="16dp"
+        android:background="@color/background"
         app:layout_constraintTop_toBottomOf="@id/topAppBar"
         app:layout_constraintBottom_toTopOf="@id/bottomNav"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Daily Limits Card -->
+        <!-- DAILY LIMITS CARD -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/dailyLimitsCard"
             android:layout_width="match_parent"
@@ -68,6 +68,7 @@
                     android:textSize="12sp"
                     android:layout_marginTop="2dp" />
 
+                <!-- FIRST ROW -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -120,6 +121,7 @@
                     </LinearLayout>
                 </LinearLayout>
 
+                <!-- SECOND ROW -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -174,7 +176,7 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- RecyclerView for the feed -->
+        <!-- FEED LIST (RecyclerView) -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerFeed"
             android:layout_width="match_parent"
@@ -182,9 +184,10 @@
             android:layout_weight="1"
             android:clipToPadding="false"
             android:paddingBottom="8dp"
-            tools:listitem="@layout/item_post_feed" />
+            tools:listitem="@layout/item_post_feed"
+            tools:itemCount="5" />
 
-        <!-- End of feed message -->
+        <!-- END OF FEED MESSAGE -->
         <TextView
             android:id="@+id/tvEndOfFeed"
             android:layout_width="match_parent"
@@ -193,11 +196,11 @@
             android:textAlignment="center"
             android:padding="12dp"
             android:textColor="@color/text_secondary"
-            android:visibility="gone"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:visibility="gone" />
     </LinearLayout>
 
-    <!-- Bottom navigation (now clearly constrained to bottom) -->
+    <!-- BOTTOM NAVIGATION -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
         android:layout_width="0dp"
@@ -206,45 +209,11 @@
         app:menu="@menu/menu_bottom_nav"
         app:itemIconTint="@color/purple_primary"
         app:itemTextColor="@color/purple_primary"
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="24dp">
-
-    <!-- App Header -->
-    <include
-        android:id="@+id/tvAppHeader"
-        layout="@layout/include_app_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- Screen title -->
-    <TextView
-        android:id="@+id/tvFeedTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Feed"
-        android:textStyle="bold"
-        android:textSize="22sp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@id/tvAppHeader"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <!-- RecyclerView for posts -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvPosts"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/tvFeedTitle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Floating action button (Post) -->
+    <!-- FLOATING POST BUTTON -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabPost"
         android:layout_width="wrap_content"
