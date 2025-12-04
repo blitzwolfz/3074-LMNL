@@ -4,14 +4,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.lmnl.R;
-import com.example.lmnl.post.Post;
-import com.example.lmnl.post.PostContract;
-import com.example.lmnl.post.PostsDbHelper;
+import com.example.lmnl.user.ProfileActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,29 +24,74 @@ public class FeedActivity extends AppCompatActivity {
     private RecyclerView rvPosts;
     private PostsAdapter postsAdapter;
     private PostsDbHelper dbHelper;
+    private BottomNavigationView bottomNav;
+    private FloatingActionButton fabPost;
+    private DailyLimitsManager limitsManager;
+    private TextView tvFeedCount, tvPostCount, tvLikesCount, tvCommentsCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed);
 
-        rvPosts = findViewById(R.id.rvPosts);
+        // Fix: Use correct RecyclerView ID from layout
+        rvPosts = findViewById(R.id.recyclerFeed);
         rvPosts.setLayoutManager(new LinearLayoutManager(this));
 
         postsAdapter = new PostsAdapter(new ArrayList<>());
         rvPosts.setAdapter(postsAdapter);
 
         dbHelper = new PostsDbHelper(this);
+        limitsManager = new DailyLimitsManager(this);
+
+        // Initialize daily limits TextViews
+        tvFeedCount = findViewById(R.id.tvFeedCount);
+        tvPostCount = findViewById(R.id.tvPostCount);
+        tvLikesCount = findViewById(R.id.tvLikesCount);
+        tvCommentsCount = findViewById(R.id.tvCommentsCount);
+
+        // Setup bottom navigation
+        bottomNav = findViewById(R.id.bottomNav);
+        bottomNav.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.menu_feed) {
+                // Already on feed, do nothing
+                return true;
+            } else if (itemId == R.id.menu_discover) {
+                // Placeholder for discover
+                return true;
+            } else if (itemId == R.id.menu_profile) {
+                Intent intent = new Intent(FeedActivity.this, ProfileActivity.class);
+                startActivity(intent);
+                return true;
+            }
+            return false;
+        });
+
+        // Setup FAB
+        fabPost = findViewById(R.id.fabPost);
+        fabPost.setOnClickListener(v -> {
+            if (limitsManager.canPost()) {
+                Intent intent = new Intent(FeedActivity.this, CreatePostActivity.class);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Daily post limit reached. Try again tomorrow!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         // Load data the first time
         loadPostsFromDb();
+        updateDailyLimitsUI();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        // Set feed as selected when returning
+        bottomNav.setSelectedItemId(R.id.menu_feed);
         // Reload in case something changed (e.g., user created a new post)
         loadPostsFromDb();
+        updateDailyLimitsUI();
     }
 
     private void loadPostsFromDb() {
@@ -51,6 +99,7 @@ public class FeedActivity extends AppCompatActivity {
 
         String[] projection = {
                 PostContract.PostEntry._ID,
+                PostContract.PostEntry.COLUMN_USERNAME,
                 PostContract.PostEntry.COLUMN_CONTENT,
                 PostContract.PostEntry.COLUMN_CREATED_AT
         };
@@ -72,21 +121,39 @@ public class FeedActivity extends AppCompatActivity {
 
         try {
             int idColIndex = cursor.getColumnIndex(PostContract.PostEntry._ID);
+            int usernameColIndex = cursor.getColumnIndex(PostContract.PostEntry.COLUMN_USERNAME);
             int contentColIndex = cursor.getColumnIndex(PostContract.PostEntry.COLUMN_CONTENT);
             int createdAtColIndex = cursor.getColumnIndex(PostContract.PostEntry.COLUMN_CREATED_AT);
 
             while (cursor.moveToNext()) {
                 long id = cursor.getLong(idColIndex);
+                String username = cursor.getString(usernameColIndex);
                 String content = cursor.getString(contentColIndex);
                 String createdAt = cursor.getString(createdAtColIndex);
 
-                posts.add(new Post(id, content, createdAt));
+                posts.add(new Post(id, username, content, createdAt));
             }
         } finally {
             cursor.close();
         }
 
         postsAdapter.setPosts(posts);
+
+        // Increment feed view count
+        if (!posts.isEmpty() && limitsManager.canViewFeed()) {
+            limitsManager.incrementFeedCount();
+        }
+    }
+
+    private void updateDailyLimitsUI() {
+        tvFeedCount.setText(String.format("Feed %d / %d",
+                limitsManager.getFeedCount(), DailyLimitsManager.LIMIT_FEED));
+        tvPostCount.setText(String.format("Posts %d / %d",
+                limitsManager.getPostCount(), DailyLimitsManager.LIMIT_POSTS));
+        tvLikesCount.setText(String.format("Likes %d / %d",
+                limitsManager.getLikesCount(), DailyLimitsManager.LIMIT_LIKES));
+        tvCommentsCount.setText(String.format("Comments %d / %d",
+                limitsManager.getCommentsCount(), DailyLimitsManager.LIMIT_COMMENTS));
     }
 
     @Override

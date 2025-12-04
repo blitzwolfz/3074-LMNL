@@ -9,9 +9,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmnl.R;
-import com.example.lmnl.post.Post;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHolder> {
 
@@ -37,8 +40,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
     @Override
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         Post post = posts.get(position);
+        holder.tvPostUsername.setText("@" + post.getUsername());
         holder.tvPostContent.setText(post.getContent());
-        holder.tvPostTimestamp.setText(post.getCreatedAt());
+        holder.tvPostTimestamp.setText(formatTimestamp(post.getCreatedAt()));
     }
 
     @Override
@@ -46,13 +50,29 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
         return posts == null ? 0 : posts.size();
     }
 
+    private String formatTimestamp(String timestamp) {
+        try {
+            // SQLite timestamp format: "yyyy-MM-dd HH:mm:ss"
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            Date date = sdf.parse(timestamp);
+
+            // Format to more readable: "MMM d, yyyy"
+            SimpleDateFormat outputFormat = new SimpleDateFormat("MMM d, yyyy · h:mm a", Locale.getDefault());
+            return outputFormat.format(date);
+        } catch (ParseException e) {
+            return timestamp; // Return original if parsing fails
+        }
+    }
+
     static class PostViewHolder extends RecyclerView.ViewHolder {
 
+        TextView tvPostUsername;
         TextView tvPostContent;
         TextView tvPostTimestamp;
 
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
+            tvPostUsername = itemView.findViewById(R.id.tvPostUsername);
             tvPostContent = itemView.findViewById(R.id.tvPostContent);
             tvPostTimestamp = itemView.findViewById(R.id.tvPostTimestamp);
         }
