@@ -78,7 +78,7 @@ public class PostDetailActivity extends AppCompatActivity {
 
         dbHelper = new PostsDbHelper(this);
         sessionManager = new SessionManager(this);
-        limitsManager = new DailyLimitsManager(this);
+        limitsManager = new DailyLimitsManager(this, sessionManager.getUsername());
 
         // Setup comments RecyclerView
         rvComments.setLayoutManager(new LinearLayoutManager(this));

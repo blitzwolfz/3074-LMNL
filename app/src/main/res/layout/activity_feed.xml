@@ -16,7 +16,7 @@
         app:titleTextColor="@color/text_primary"
         app:subtitle="Today · Nov 28"
         app:subtitleTextColor="@color/text_secondary"
-        app:navigationIcon="@drawable/ic_menu"
+        app:navigationIcon="@drawable/ic_info"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -197,6 +197,16 @@
             android:paddingBottom="8dp"
             tools:listitem="@layout/item_post_feed"
             tools:itemCount="5" />
+
+        <!-- LOAD NEXT POST BUTTON -->
+        <Button
+            android:id="@+id/btnLoadNextPost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Load Next Post (0/0)"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/purple_primary" />
 
         <!-- END OF FEED MESSAGE -->
         <TextView

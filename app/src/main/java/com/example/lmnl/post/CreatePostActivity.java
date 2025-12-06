@@ -33,7 +33,7 @@ public class CreatePostActivity extends AppCompatActivity {
         // Init DB helper, session, and limits manager
         dbHelper = new PostsDbHelper(this);
         sessionManager = new SessionManager(this);
-        limitsManager = new DailyLimitsManager(this);
+        limitsManager = new DailyLimitsManager(this, sessionManager.getUsername());
 
         btnSubmitPost.setOnClickListener(v -> savePost());
     }

@@ -24,8 +24,10 @@ public class DailyLimitsManager {
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
 
-    public DailyLimitsManager(Context context) {
-        prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+    public DailyLimitsManager(Context context, String username) {
+        // Use user-specific SharedPreferences for per-user limits
+        String prefName = (username != null) ? PREF_NAME + "_" + username : PREF_NAME;
+        prefs = context.getSharedPreferences(prefName, Context.MODE_PRIVATE);
         editor = prefs.edit();
         checkAndResetIfNewDay();
     }

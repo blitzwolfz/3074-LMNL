@@ -11,6 +11,7 @@ public class SessionManager {
     private static final String KEY_EMAIL = "email";
     private static final String KEY_BIO = "bio";
     private static final String KEY_WEBSITE = "website";
+    private static final String KEY_LAST_EMAIL = "lastEmail";
 
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
@@ -25,7 +26,16 @@ public class SessionManager {
         editor.putString(KEY_USERNAME, username);
         editor.putString(KEY_FULL_NAME, fullName);
         editor.putString(KEY_EMAIL, email);
+        saveLastLoginEmail(email);
         editor.apply();
+    }
+
+    public void saveLastLoginEmail(String email) {
+        editor.putString(KEY_LAST_EMAIL, email);
+    }
+
+    public String getLastLoginEmail() {
+        return prefs.getString(KEY_LAST_EMAIL, null);
     }
 
     public void updateProfile(String fullName, String email, String bio, String website) {
@@ -61,7 +71,13 @@ public class SessionManager {
     }
 
     public void logout() {
+        // Save last email before clearing session
+        String lastEmail = prefs.getString(KEY_LAST_EMAIL, null);
         editor.clear();
+        // Restore last email for quick login
+        if (lastEmail != null) {
+            editor.putString(KEY_LAST_EMAIL, lastEmail);
+        }
         editor.apply();
     }
 }

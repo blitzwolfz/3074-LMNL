@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LMNL" >
         <activity
+            android:name=".AboutActivity"
+            android:exported="false" />
+        <activity
             android:name=".user.ProfileActivity"
             android:exported="false" />
         <activity

@@ -49,6 +49,13 @@ public class LoginActivity extends AppCompatActivity {
         userDbHelper = new UserDbHelper(this);
         sessionManager = new SessionManager(this);
 
+        // Quick login: auto-fill last logged-in email
+        String lastEmail = sessionManager.getLastLoginEmail();
+        if (lastEmail != null) {
+            etEmail.setText(lastEmail);
+            etPassword.requestFocus();
+        }
+
         btnLogin.setOnClickListener(v -> loginUser());
 
         tvGoToRegister.setOnClickListener(v -> {

@@ -19,10 +19,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.lmnl.MainActivity;
 import com.example.lmnl.R;
 import com.example.lmnl.auth.SessionManager;
+import com.example.lmnl.post.FeedActivity;
 import com.example.lmnl.post.Post;
 import com.example.lmnl.post.PostContract;
 import com.example.lmnl.post.PostsAdapter;
 import com.example.lmnl.post.PostsDbHelper;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +34,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView tvDisplayName, tvUsername, tvWebsite, tvBio;
     private Button btnEditProfile, btnLogout;
     private RecyclerView rvUserPosts;
+    private BottomNavigationView bottomNav;
     private SessionManager sessionManager;
     private PostsDbHelper postsDbHelper;
     private PostsAdapter postsAdapter;
@@ -78,6 +81,28 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Logout button
         btnLogout.setOnClickListener(v -> showLogoutDialog());
+
+        // Setup bottom navigation
+        bottomNav = findViewById(R.id.bottomNav);
+        bottomNav.setSelectedItemId(R.id.menu_profile);
+        bottomNav.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.menu_back) {
+                // Navigate back
+                onBackPressed();
+                return true;
+            } else if (itemId == R.id.menu_feed) {
+                // Go to feed
+                Intent intent = new Intent(ProfileActivity.this, FeedActivity.class);
+                startActivity(intent);
+                finish();
+                return true;
+            } else if (itemId == R.id.menu_profile) {
+                // Already on profile
+                return true;
+            }
+            return false;
+        });
     }
 
     @Override

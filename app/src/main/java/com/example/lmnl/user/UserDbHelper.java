@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class UserDbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "users.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     private static final String SQL_CREATE_TABLE =
             "CREATE TABLE " + UserContract.UserEntry.TABLE_NAME + " (" +
@@ -34,7 +34,26 @@ public class UserDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(SQL_DROP_TABLE);
-        onCreate(db);
+        // IMPORTANT: Never drop user data in production
+        // Use version-based migration to preserve existing accounts
+
+        if (oldVersion < 2) {
+            // Migration from version 1 to 2 - no schema changes needed
+            // Just version bump
+        }
+
+        if (oldVersion < 3) {
+            // Migration from version 2 to 3 - no schema changes needed
+            // Just version bump for fixing account persistence issue
+        }
+
+        // Future migrations should use ALTER TABLE to add columns
+        // Example: db.execSQL("ALTER TABLE users ADD COLUMN created_at TEXT DEFAULT CURRENT_TIMESTAMP");
+    }
+
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        // Prevent data loss on downgrade - keep existing data
+        // Don't drop tables on version rollback
     }
 }
