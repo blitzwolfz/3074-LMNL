@@ -148,12 +148,17 @@
                 android:textSize="12sp"
                 tools:text="· 3 comments" />
 
+            <!-- Spacer to push More button to the right -->
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
             <!-- More menu -->
             <ImageButton
                 android:id="@+id/btnMore"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginStart="auto"
                 android:background="@android:color/transparent"
                 android:src="@drawable/ic_more_vert"
                 android:contentDescription="More options"

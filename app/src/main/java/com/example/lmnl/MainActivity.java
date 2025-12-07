@@ -13,14 +13,28 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.lmnl.auth.LoginActivity;
+import com.example.lmnl.auth.SessionManager;
+import com.example.lmnl.post.FeedActivity;
 
 public class MainActivity extends AppCompatActivity {
 
     private VideoView videoBackground;
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Check if user is already logged in
+        sessionManager = new SessionManager(this);
+        if (sessionManager.isLoggedIn()) {
+            // User is logged in, go directly to feed
+            Intent intent = new Intent(MainActivity.this, FeedActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 

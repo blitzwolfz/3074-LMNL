@@ -11,27 +11,29 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.lmnl.R;
-import com.example.lmnl.post.PostContract;
-import com.example.lmnl.post.PostsDbHelper;
+import com.example.lmnl.auth.SessionManager;
 
 public class CreatePostActivity extends AppCompatActivity {
 
     private EditText etPostText;
     private Button btnSubmitPost;
-
     private PostsDbHelper dbHelper;
+    private SessionManager sessionManager;
+    private DailyLimitsManager limitsManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_post); // <-- your XML
+        setContentView(R.layout.activity_create_post);
 
         // Init views
         etPostText = findViewById(R.id.etPostText);
         btnSubmitPost = findViewById(R.id.btnSubmitPost);
 
-        // Init DB helper
+        // Init DB helper, session, and limits manager
         dbHelper = new PostsDbHelper(this);
+        sessionManager = new SessionManager(this);
+        limitsManager = new DailyLimitsManager(this, sessionManager.getUsername());
 
         btnSubmitPost.setOnClickListener(v -> savePost());
     }
@@ -44,9 +46,23 @@ public class CreatePostActivity extends AppCompatActivity {
             return;
         }
 
+        String username = sessionManager.getUsername();
+        if (username == null) {
+            Toast.makeText(this, "Please login first", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        // Check if user can still post today
+        if (!limitsManager.canPost()) {
+            Toast.makeText(this, "Daily post limit reached. Try again tomorrow!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
+        values.put(PostContract.PostEntry.COLUMN_USERNAME, username);
         values.put(PostContract.PostEntry.COLUMN_CONTENT, content);
         // created_at will be set automatically by DEFAULT CURRENT_TIMESTAMP
 
@@ -55,10 +71,10 @@ public class CreatePostActivity extends AppCompatActivity {
         if (newRowId == -1) {
             Toast.makeText(this, "Error saving post", Toast.LENGTH_SHORT).show();
         } else {
+            // Increment post count
+            limitsManager.incrementPostCount();
             Toast.makeText(this, "Post saved", Toast.LENGTH_SHORT).show();
-            etPostText.setText(""); // Clear input after save
-            // You could finish() here if you want to go back to feed
-            // finish();
+            finish(); // Go back to feed
         }
     }
 
